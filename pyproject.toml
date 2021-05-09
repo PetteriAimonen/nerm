@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "nerm"
+version = "0.1.0"
+description = "Nerm - No Effort Requirements Management"
+readme = "README.md"
+authors = ["Petteri Aimonen <jpa@git.mail.kapsi.fi>"]
+license = "MIT"
+
+[tool.poetry.scripts]
+nerm = 'nerm.nerm:main_cli'
+
+[tool.poetry.dependencies]
+python = ">=3.6"
+marko = ">=1.0.0"
+tomlkit = ">=0.7.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
