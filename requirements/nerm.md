@@ -14,8 +14,12 @@ Any heading starting with a tag in brackets `[]` is regarded as a requirement id
 [FR-Crossreference] Requirement cross-referencing
 -------------------------------------------------
 Nerm will search all text files, including source code, for tags in brackets.
-If a git repository is detected, all commit messages are searched also.
 If a tag matches an existing requirement tag, a cross-reference to the file is added.
+
+[FR-Gitreferences] Cross-references from git commit messages
+------------------------------------------------------------
+If a git repository is detected, all commit messages are searched for requirement tags.
+A cross-reference is added also from the commit that added the requirement.
 
 [FR-Update] Updating cross-references
 -------------------------------------
