@@ -11,7 +11,7 @@ nerm = 'nerm.nerm:main_cli'
 
 [tool.poetry.dependencies]
 python = ">=3.6"
-marko = ">=1.0.0"
+commonmark = ">=0.9.0"
 tomlkit = ">=0.7.0"
 
 [tool.poetry.dev-dependencies]

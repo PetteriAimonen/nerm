@@ -6,8 +6,9 @@ def test_discovery():
     Tests [FR-Discovery]
     '''
     settings = nerm.nermfile.load_settings("tests/data/Nermfile", must_exist = False)
-    reqs = list(nerm.reqfile.find_requirements(settings))
-    assert reqs[0][0] == '[TEST1]'
-    assert reqs[0][1].endswith('tests/data/test.md')
-    assert reqs[1][0] == '[TEST2]'
-    assert reqs[1][1].endswith('tests/data/test.md')
+    reqs = nerm.reqfile.find_requirements(settings)
+    result = [(req.tag, req.relpath, req.lineno)
+              for req in reqs.values()]
+    assert result == [('[TEST1]', 'test.md', 4),
+                      ('[TEST2]', 'test.md', 8)]
+    

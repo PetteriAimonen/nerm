@@ -6,8 +6,8 @@ import os.path
 default_settings = {
     'requirement_paths': ['**/*.md'],
     'crossref_paths': ['**/*'],
-    'requirement_pattern': '^\[[A-Za-z0-9][^ \]]*\]',
-    'crossref_pattern': '\[[A-Za-z0-9][^ \]]*\]',
+    'requirement_patterns': [r'^(\[[A-Za-z0-9][^ \]]*\])'],
+    'crossref_patterns': [r'(\[[A-Za-z0-9][^ \]]*\]).*'],
 }
 
 def load_settings(filename, must_exist = True):
@@ -24,5 +24,7 @@ def load_settings(filename, must_exist = True):
     settings_with_path = ['requirement_paths', 'crossref_paths']
     for sname in settings_with_path:
         settings[sname] = [os.path.join(basedir, path) for path in settings[sname]]
+
+    settings['basedir'] = basedir
 
     return settings
