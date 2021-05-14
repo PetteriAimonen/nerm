@@ -36,11 +36,14 @@ Any existing links that no longer exist are removed.
 - &#128279; [update.py:69](nerm/update.py#L69): Implements [FR-Update].
 - &#128279; [test_update.py:9](tests/test_update.py#L9): Tests [FR-Update].
 
+[FR-Satisfy] Determine satisfied requirements
+---------------------------------------------
+Criteria for satisfying a requirement are specified in a Nermfile.
+By default a requirement is satisfied if it is referenced at least once.
+
 [FR-Report] Reporting requirement status
 ----------------------------------------
 Nerm can report discovered requirements and whether they are satisfied.
-Criteria for satisfying a requirement are specified in a Nermfile.
-By default a requirement is satisfied if it is referenced at least once.
 
 [FR-Unknown] Reporting unknown cross-references
 -----------------------------------------------
