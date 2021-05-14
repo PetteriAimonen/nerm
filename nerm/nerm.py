@@ -19,6 +19,7 @@ if __name__ == "__main__" and __package__ is None:
 from .nermfile import default_settings, load_settings
 from .reqfile import find_requirements
 from .crossrefs import find_cross_references
+from .satisfy import check_satisfied
 from .update import update_all_crossrefs
 
 parser = argparse.ArgumentParser(description = 'Collect and update requirements')
@@ -37,11 +38,14 @@ def main_cli():
 
     reqs = find_requirements(settings)
     find_cross_references(reqs, settings)
+    check_satisfied(reqs, settings)
 
     for req in reqs.values():
-        crossrefs = ', '.join("%s:%d" % (os.path.basename(c[0]), c[1]) for c in req.crossrefs)
+        crossrefs = ', '.join('{c.basename}:{c.lineno}'.format(c = c) for c in req.crossrefs)
         if crossrefs: crossrefs = ' (' + crossrefs + ')'
-        print('%s: %s%s' % (req.relpath, req.tag, crossrefs))
+        satisfied = ''
+        if req.satisfied_by: satisfied = ' (satisfied)'
+        print('%s: %s%s%s' % (req.relpath, req.tag, crossrefs, satisfied))
     
     if args.update:
         update_all_crossrefs(reqs, settings)

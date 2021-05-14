@@ -9,7 +9,7 @@ def test_crossrefs():
     settings = nerm.nermfile.load_settings("tests/data/Nermfile", must_exist = False)
     reqs = nerm.reqfile.find_requirements(settings)
     nerm.crossrefs.find_cross_references(reqs, settings)
-    result = [(req.tag, [cref[1] for cref in req.crossrefs])
+    result = [(req.tag, [cref.lineno for cref in req.crossrefs])
               for req in reqs.values()]
     assert result == [('[TEST1]', [1]),
                       ('[TEST2]', [6])]

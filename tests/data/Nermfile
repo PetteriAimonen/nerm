@@ -1,0 +1,4 @@
+satisfy_rules = [
+    ['TEST1', '.*'],
+    ['TEST2', [['.*', "can't get no satisfaction"]]]
+]

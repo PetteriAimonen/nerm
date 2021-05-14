@@ -7,17 +7,18 @@ from tempfile import NamedTemporaryFile
 
 def write_crossrefs(dstfile, requirement, settings):
     '''Write list of cross-references to output file.'''
-    for file, lineno, fulltext in requirement.crossrefs:
-        data = {
-            'abspath': os.path.abspath(file),
-            'relpath': os.path.relpath(file, settings['basedir']),
-            'basename': os.path.basename(file),
-            'lineno': lineno,
-            'fulltext': fulltext
-        }
+    for crossref in requirement.crossrefs:
         dstfile.write(settings['crossref_prefix']
-                    + settings['crossref_format'] % data
+                    + settings['crossref_format'].format(c = crossref, r = requirement)
                     + '\n')
+
+def write_satisfy(dstfile, requirement, settings):
+    '''Write a line indicating the requirement is satisfied.'''
+    if requirement.satisfied_by:
+        terms = [settings['satisfy_term_format'].format(c = crossref, r = requirement)
+                 for crossref in requirement.satisfied_by]
+        terms = settings['satisfy_term_delimiter'].join(terms)
+        dstfile.write(settings['satisfy_prefix'] + terms + '\n')
 
 def update_document(file, dstfile, requirements, settings):
     '''Update all cross references in given file.
@@ -45,7 +46,8 @@ def update_document(file, dstfile, requirements, settings):
         srclineno += 1
         
         # Remove any old cross-references, keep other lines
-        if line.startswith(settings['crossref_prefix']):
+        if (line.startswith(settings['crossref_prefix']) or
+            line.startswith(settings['satisfy_prefix'])):
             line = ''
             prev_line_removed = True
         elif prev_line_removed and not line.strip():
@@ -62,6 +64,7 @@ def update_document(file, dstfile, requirements, settings):
                         dstfile.write('\n') # Empty line before list
 
                     write_crossrefs(dstfile, req, settings)
+                    write_satisfy(dstfile, req, settings)
                     dstfile.write('\n') # Empty line at end
 
 def update_all_crossrefs(requirements, settings):

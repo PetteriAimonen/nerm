@@ -4,6 +4,17 @@ import re
 import glob
 import os.path
 
+class Crossref:
+    def __init__(self, file, relpath, lineno, fulltext):
+        self.file = file
+        self.relpath = relpath
+        self.basename = os.path.basename(file)
+        self.lineno = lineno
+        self.fulltext = fulltext
+
+    def __str__(self):
+        return '%s:%d %s' % (self.basename, self.lineno, self.fulltext)
+
 def iterate_crossrefs(file, known_tags, settings):
     '''Yields (lineno, tag, full_text) for
     each known tag found in the file.'''
@@ -31,7 +42,7 @@ def find_cross_references(requirements, settings):
     for path in settings['crossref_paths']:
         for file in glob.glob(path, recursive = True):
             if os.path.isfile(file):
-                for lineno, tag, full_text in iterate_crossrefs(file, known_tags, settings):
+                for lineno, tag, fulltext in iterate_crossrefs(file, known_tags, settings):
                     req = requirements[tag]
                     
                     if req.file == file and req.lineno <= lineno <= req.last_lineno:
@@ -39,7 +50,8 @@ def find_cross_references(requirements, settings):
                         continue
                     else:
                         # Add cross-reference
-                        req.crossrefs.append((file, lineno, full_text))
+                        relpath = os.path.relpath(file, settings['basedir'])
+                        req.crossrefs.append(Crossref(file, relpath, lineno, fulltext))
 
 # For manual testing run with `python -m nerm.crossrefs`
 if __name__ == '__main__':
@@ -48,5 +60,4 @@ if __name__ == '__main__':
     reqs = reqfile.find_requirements(settings)
     find_cross_references(reqs, settings)
     for req in reqs.values():
-        crossrefs = str(["%s:%d" % (os.path.basename(c[0]), c[1]) for c in req.crossrefs])
-        print('%s: %s' % (req.tag, crossrefs))
+        print('%s: %s' % (req.tag, req.crossrefs))

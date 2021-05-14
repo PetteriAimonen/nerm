@@ -32,9 +32,11 @@ class Requirement:
         self.tag = tag
         self.file = file
         self.relpath = relpath
+        self.basename = os.path.basename(file)
         self.lineno = lineno
         self.last_lineno = last_lineno
         self.crossrefs = []
+        self.satisfied_by = None
 
     def __str__(self):
         return 'Requirement(%s, %s)' % (self.tag, self.file)
