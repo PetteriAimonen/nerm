@@ -34,7 +34,7 @@ def find_cross_references(requirements, settings):
                 for lineno, tag, full_text in iterate_crossrefs(file, known_tags, settings):
                     req = requirements[tag]
                     
-                    if req.file == file and req.lineno == lineno:
+                    if req.file == file and req.lineno <= lineno <= req.last_lineno:
                         # This is the requirement itself, skip
                         continue
                     else:

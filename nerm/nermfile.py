@@ -7,7 +7,10 @@ default_settings = {
     'requirement_paths': ['**/*.md'],
     'crossref_paths': ['**/*'],
     'requirement_patterns': [r'^(\[[A-Za-z0-9][^ \]]*\])'],
-    'crossref_patterns': [r'(\[[A-Za-z0-9][^ \]]*\]).*'],
+    'crossref_patterns': [r'(?:[^\s][^#/*]*)?(\[[A-Za-z0-9][^ \]]*\]).*'],
+    'crossref_prefix': '- &#128279; ',
+    'crossref_format': '[%(basename)s:%(lineno)d](%(relpath)s#L%(lineno)d): %(fulltext)s',
+    'crossref_location': 'end',
 }
 
 def load_settings(filename, must_exist = True):

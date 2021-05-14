@@ -19,10 +19,13 @@ if __name__ == "__main__" and __package__ is None:
 from .nermfile import default_settings, load_settings
 from .reqfile import find_requirements
 from .crossrefs import find_cross_references
+from .update import update_all_crossrefs
 
 parser = argparse.ArgumentParser(description = 'Collect and update requirements')
 parser.add_argument('-f', dest = 'nermfile', metavar = 'Nermfile', type=str,
                     help="Nermfile to read settings from")
+parser.add_argument('-u', dest = 'update', action = 'store_true',
+                    help="Update list of cross-references in requirement documents.")
 
 def main_cli():
     args = parser.parse_args()
@@ -39,6 +42,9 @@ def main_cli():
         crossrefs = ', '.join("%s:%d" % (os.path.basename(c[0]), c[1]) for c in req.crossrefs)
         if crossrefs: crossrefs = ' (' + crossrefs + ')'
         print('%s: %s%s' % (req.relpath, req.tag, crossrefs))
+    
+    if args.update:
+        update_all_crossrefs(reqs, settings)
 
 if __name__ == '__main__':
     main_cli()

@@ -17,29 +17,49 @@ def iterate_headings(document):
     '''Iterate through heading texts.
     Yields (lineno, text).'''
     node = document.first_child
+    last = node
     while node:
         if node.t == 'heading':
             yield (node.sourcepos[0][0], get_text(node))
+        last = node
         node = node.nxt
-
-def iterate_requirements(document, settings):
-    '''Iterate requirements from a single document.'''
-    patterns = [re.compile(p) for p in settings['requirement_patterns']]
-    for lineno, heading in iterate_headings(document):
-        for pattern in patterns:
-            for match in pattern.finditer(heading):
-                yield (lineno, match.group(1))
+    
+    # Indicate end of document to iterate_requirements()
+    yield (last.sourcepos[1][0], '')
 
 class Requirement:
-    def __init__(self, tag, file, lineno, basedir):
+    def __init__(self, tag, file, relpath, lineno, last_lineno):
         self.tag = tag
         self.file = file
-        self.relpath = os.path.relpath(file, basedir)
+        self.relpath = relpath
         self.lineno = lineno
+        self.last_lineno = last_lineno
         self.crossrefs = []
 
     def __str__(self):
         return 'Requirement(%s, %s)' % (self.tag, self.file)
+
+def iterate_requirements(file, settings):
+    '''Iterate requirements from a single document.'''
+    parser = commonmark.Parser()
+    patterns = [re.compile(p) for p in settings['requirement_patterns']]
+    document = parser.parse(open(file).read())
+    relpath = os.path.relpath(file, settings['basedir'])
+    prev_line = 0
+    prev_tags = []
+
+    for lineno, heading in iterate_headings(document):
+        # Emit tags from previous heading, now that we know the end of the section
+        for tag in prev_tags:
+            yield Requirement(tag, file, relpath, prev_line, lineno - 1)
+
+        prev_line = lineno
+        prev_tags.clear()
+
+        # Collect tags from this heading
+        for pattern in patterns:
+            for match in pattern.finditer(heading):
+                prev_tags.append(match.group(1))
 
 def find_requirements(settings):
     '''Parses all markdown files found in configured path and
@@ -47,13 +67,11 @@ def find_requirements(settings):
     Implements [FR-Discovery].
     '''
     basedir = settings['basedir']
-    parser = commonmark.Parser()
     result = OrderedDict()
     for path in settings['requirement_paths']:
         for file in glob.glob(path, recursive = True):
-            document = parser.parse(open(file).read())
-            for lineno, tag in iterate_requirements(document, settings):
-                result[tag] = Requirement(tag, file, lineno, basedir)
+            for req in iterate_requirements(file, settings):
+                result[req.tag] = req
     
     return result
 
@@ -62,4 +80,5 @@ if __name__ == '__main__':
     from nerm import nermfile
     settings = nermfile.load_settings("Nermfile", False)
     for req in find_requirements(settings).values():
-        print('%s: %s' % (req.file, req.tag))
+        print('%s: %s (lines %d to %d)' % (os.path.relpath(req.file, settings['basedir']),
+            req.tag, req.lineno, req.last_lineno))
