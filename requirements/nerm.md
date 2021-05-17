@@ -12,9 +12,8 @@ Nerm can be given a list of paths, and it will recursively search for all `*.md`
 Any heading starting with a tag in brackets `[]` is regarded as a requirement id.
 
 - &#9733; Added by Petteri Aimonen in f9bbb1 on 2021-05-09
-- &#128462; [reqfile.py:69](nerm/reqfile.py#L69): Implements [FR-Discovery].
-- &#128462; [test_reqfile.py:6](tests/test_reqfile.py#L6): Tests [FR-Discovery]
-- &check; Satisfied by [reqfile.py:69](nerm/reqfile.py#L69) and [test_reqfile.py:6](tests/test_reqfile.py#L6)
+- &#128462; [reqfile.py:69](../nerm/reqfile.py#L69): Implements [FR-Discovery].
+- &#128462; [test_reqfile.py:6](../tests/test_reqfile.py#L6): Tests [FR-Discovery]
 
 [FR-Crossreference] Requirement cross-referencing
 -------------------------------------------------
@@ -22,9 +21,9 @@ Nerm will search all text files, including source code, for tags in brackets.
 If a tag matches an existing requirement tag, a cross-reference to the file is added.
 
 - &#9733; Added by Petteri Aimonen in f9bbb1 on 2021-05-09
-- &#128462; [crossrefs.py:44](nerm/crossrefs.py#L44): Implements [FR-Crossreference]
-- &#128462; [test_crossrefs.py:7](tests/test_crossrefs.py#L7): Tests [FR-Crossreference].
-- &check; Satisfied by [crossrefs.py:44](nerm/crossrefs.py#L44) and [test_crossrefs.py:7](tests/test_crossrefs.py#L7)
+- &#9939; a351a5: [FR-Crossreference] Basic cross reference discovery implemented
+- &#128462; [crossrefs.py:53](../nerm/crossrefs.py#L53): Implements [FR-Crossreference]
+- &#128462; [test_crossrefs.py:7](../tests/test_crossrefs.py#L7): Tests [FR-Crossreference].
 
 [FR-Gitreferences] Cross-references from git commit messages
 ------------------------------------------------------------
@@ -33,7 +32,7 @@ A cross-reference is added also from the commit that added the requirement.
 
 - &#9733; Added by Petteri Aimonen in 3c01f9 on 2021-05-12
 - &#9939; ace598: Implement [FR-Gitreferences]
-- &#128462; [gitrefs.py:73](nerm/gitrefs.py#L73): Implements [FR-Gitreferences].
+- &#128462; [gitrefs.py:76](../nerm/gitrefs.py#L76): Implements [FR-Gitreferences].
 
 [FR-Update] Updating cross-references
 -------------------------------------
@@ -43,9 +42,8 @@ Any existing links that no longer exist are removed.
 
 - &#9733; Added by Petteri Aimonen in f9bbb1 on 2021-05-09
 - &#9939; 767921: Implement [FR-Update]
-- &#128462; [update.py:83](nerm/update.py#L83): Implements [FR-Update].
-- &#128462; [test_update.py:9](tests/test_update.py#L9): Tests [FR-Update].
-- &check; Satisfied by [update.py:83](nerm/update.py#L83) and [test_update.py:9](tests/test_update.py#L9)
+- &#128462; [update.py:83](../nerm/update.py#L83): Implements [FR-Update].
+- &#128462; [test_update.py:9](../tests/test_update.py#L9): Tests [FR-Update].
 
 [FR-IncrementalUpdate] Incremental updating of cross-references
 ---------------------------------------------------------------
@@ -62,9 +60,8 @@ By default there are no rules, i.e. requirements cannot be satisfied.
 
 - &#9733; Added by Petteri Aimonen in f61606 on 2021-05-14
 - &#9939; 90f70b: Implement [FR-Satisfy]
-- &#128462; [satisfy.py:51](nerm/satisfy.py#L51): Implements [FR-Satisfy]
-- &#128462; [test_satisfy.py:8](tests/test_satisfy.py#L8): Tests [FR-Satisfy].
-- &check; Satisfied by [satisfy.py:51](nerm/satisfy.py#L51) and [test_satisfy.py:8](tests/test_satisfy.py#L8)
+- &#128462; [satisfy.py:51](../nerm/satisfy.py#L51): Implements [FR-Satisfy]
+- &#128462; [test_satisfy.py:8](../tests/test_satisfy.py#L8): Tests [FR-Satisfy].
 
 [FR-Report] Reporting requirement status
 ----------------------------------------
@@ -86,16 +83,22 @@ Documentation requirements
 A simple example case is needed for getting started with nerm.
 
 - &#9733; Added by Petteri Aimonen in f9bbb1 on 2021-05-09
+- &#128462; [README.md:34](../README.md#L34): [DR-Readme] and [DR-Example] documented here
+- &check; Satisfied by [README.md:34](../README.md#L34)
 
 [DR-Readme] Basic readme
 ------------------------
 Readme should give installation instructions and simple walk-through with the example.
 
 - &#9733; Added by Petteri Aimonen in f9bbb1 on 2021-05-09
+- &#128462; [README.md:34](../README.md#L34): [DR-Readme] and [DR-Example] documented here
+- &check; Satisfied by [README.md:34](../README.md#L34)
 
 [DR-Nermfile] Nermfile format
 -----------------------------
 
 - &#9733; Added by Petteri Aimonen in f9bbb1 on 2021-05-09
+- &#128462; [Nermfile.md:3](../docs/Nermfile.md#L3): [DR-Nermfile] documented here
+- &check; Satisfied by [Nermfile.md:3](../docs/Nermfile.md#L3)
 
 The format and what can be done within Nermfile should be documented.
