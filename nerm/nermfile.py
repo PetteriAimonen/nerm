@@ -19,7 +19,7 @@ paths = ['**/*.md']
 # List of patterns to search for requirement tags.
 # This regexp is matched against the heading text, and the first group is used as the tag.
 # Default pattern matches tag in form of [TAG] in beginning of line.
-patterns = ['^(\[[A-Za-z0-9][^ \]]*\])']
+patterns = ['(\[[A-Za-z0-9][^ \]]*\])']
 
 # *** Discovery of cross-references in other files. ***
 [crossrefs]
@@ -28,13 +28,13 @@ patterns = ['^(\[[A-Za-z0-9][^ \]]*\])']
 # Files can be any UTF-8 text file type. Binary files are automatically ignored.
 paths = ['**/*']
 
-# Patterns to search for cross-references.
-# The regexp is matched against a single line of file.
-# The first group is the description text and second group the tag name.
-# Default patterns match a comment text or a whole line.
+# Patterns to extract the relevant part of a line for cross-reference.
+# These attempt to detect common source code comment delimiters.
+# They are only applied to lines that contain a known requirement tag pattern.
 patterns = [
-    '[#/*]\s*([^#/*].*(\[[A-Za-z0-9][^ \]]*\]).*)',
-    '((?:[^\s].*)?(\[[A-Za-z0-9][^ \]]*\]).*)'
+    '<!---*(.*[^->])-*-->',
+    '[#/*]([^#/*].*)',
+    '(.*)'
 ]
 
 # *** Discovery of cross-references in git commit messages ***

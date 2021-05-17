@@ -12,7 +12,7 @@ class Crossref:
         self.relpath = relpath
         self.basename = os.path.basename(file)
         self.lineno = lineno
-        self.fulltext = fulltext
+        self.fulltext = fulltext.strip()
 
     def __str__(self):
         return '%s:%d %s' % (self.basename, self.lineno, self.fulltext)
@@ -20,6 +20,7 @@ class Crossref:
 def iterate_crossrefs(file, known_tags, settings):
     '''Yields (lineno, tag, full_text) for
     each known tag found in the file.'''
+    tag_pattern = re.compile('|'.join(re.escape(tag) for tag in known_tags))
     patterns = [re.compile(p) for p in settings['crossrefs']['patterns']]
     try:
         lineno = 0
@@ -29,11 +30,17 @@ def iterate_crossrefs(file, known_tags, settings):
             if is_generated_line(line, settings):
                 continue
 
-            for pattern in patterns:
-                match = pattern.search(line)
-                if match and match.group(2) in known_tags:
-                    yield (lineno, match.group(2), match.group(1))
-                    break
+            if tag_pattern.search(line):
+                # Contains at least one tag, find the comment format.
+
+                for pattern in patterns:
+                    match = pattern.search(line)
+                    if match:
+                        fulltext = match.group(1)
+                        for tag in known_tags:
+                            if tag in fulltext:
+                                yield (lineno, tag, fulltext)
+                        break
 
 
     except UnicodeDecodeError:

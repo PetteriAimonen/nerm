@@ -16,7 +16,7 @@ class Gitref(Crossref):
         self.message = commit.message
         self.datetime = commit.committed_datetime
         self.date = self.datetime.date()
-        self.fulltext = fulltext
+        self.fulltext = fulltext.strip()
 
         # For compatibility with Crossref class
         self.file = self.relpath = self.basename = self.relation + '-' + self.shorthash
@@ -37,19 +37,21 @@ def process_commits(repo, requirements, settings):
     '''Iterate through all commits in current branch and search for tag references.'''
     
     known_tags = set(requirements.keys())
+    tag_pattern = re.compile('|'.join(re.escape(tag) for tag in known_tags))
     patterns = [re.compile(p) for p in settings['git']['patterns']]
     
     for commit in repo.iter_commits(reverse = True):
         lines = commit.message.split('\n')
         for line in lines:
-            for pattern in patterns:
-                match = pattern.search(line)
-                if match:
-                    fulltext = match.group(1)
-                    tag = match.group(2)
-                    
-                    if tag in known_tags and not crossref_exists(requirements[tag], commit):
-                        requirements[tag].crossrefs.append(Gitref(commit, fulltext))
+            if tag_pattern.search(line):
+                for pattern in patterns:
+                    match = pattern.search(line)
+                    if match:
+                        fulltext = match.group(1)
+
+                        for tag in known_tags:
+                            if tag in fulltext and not crossref_exists(requirements[tag], commit):
+                                requirements[tag].crossrefs.append(Gitref(commit, fulltext))
 
 def process_blame(repo, file, requirements, settings):
     '''Iterate through all commits to a requirement file and note the commit that
