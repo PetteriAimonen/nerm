@@ -16,7 +16,7 @@ if __name__ == "__main__" and __package__ is None:
     import nerm
     __package__ = str("nerm")
 
-from .nermfile import default_settings, load_settings
+from .nermfile import load_settings
 from .reqfile import find_requirements
 from .crossrefs import find_cross_references
 from .satisfy import check_satisfied
@@ -34,7 +34,7 @@ def main_cli():
     if args.nermfile:
         settings = load_settings(args.nermfile)
     else:
-        settings = load_settings("Nermfile", must_exist = False)
+        settings = load_settings("Nermfile.toml", must_exist = False)
 
     reqs = find_requirements(settings)
     find_cross_references(reqs, settings)

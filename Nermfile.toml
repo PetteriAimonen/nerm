@@ -1,11 +1,13 @@
-requirement_paths = ['requirements/**/*.md']
+[requirements]
+paths = ['requirements/**/*.md']
 
-satisfy_rules = [
+[satisfy]
+rules = [
     # Functional requirements are satisfied when there is implementation
     # under source directory and a test under tests.
-    ['FR-.*', [['(?i)^nerm/.* .*Implement', '^tests/']]],
+    ['FR-.*', ['(?i)^nerm/.* .*Implement', '^tests/']],
 
     # Documentation requirements are satisfied when they have been mentioned
     # in e.g. commit message.
-    ['DR-.*', ['.*']],
+    ['DR-.*', '.*'],
 ]

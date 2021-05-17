@@ -5,7 +5,7 @@ def test_discovery():
     '''Tests discovery of requirement tags.
     Tests [FR-Discovery]
     '''
-    settings = nerm.nermfile.load_settings("tests/data/Nermfile", must_exist = False)
+    settings = nerm.nermfile.load_settings("tests/data/Nermfile.toml")
     reqs = nerm.reqfile.find_requirements(settings)
     result = [(req.tag, req.relpath, req.lineno)
               for req in reqs.values()]

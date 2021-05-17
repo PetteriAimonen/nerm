@@ -7,7 +7,7 @@ def test_satisfy():
     '''Test applying satisfaction rules.
     Tests [FR-Satisfy].
     '''
-    settings = nerm.nermfile.load_settings("tests/data/Nermfile", must_exist = False)
+    settings = nerm.nermfile.load_settings("tests/data/Nermfile.toml")
     reqs = nerm.reqfile.find_requirements(settings)
     nerm.crossrefs.find_cross_references(reqs, settings)
     nerm.satisfy.check_satisfied(reqs, settings)

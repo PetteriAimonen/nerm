@@ -6,7 +6,7 @@ def test_crossrefs():
     '''Test the matching of cross-references to requirement tags.
     Tests [FR-Crossreference].
     '''
-    settings = nerm.nermfile.load_settings("tests/data/Nermfile", must_exist = False)
+    settings = nerm.nermfile.load_settings("tests/data/Nermfile.toml")
     reqs = nerm.reqfile.find_requirements(settings)
     nerm.crossrefs.find_cross_references(reqs, settings)
     result = [(req.tag, [cref.lineno for cref in req.crossrefs])

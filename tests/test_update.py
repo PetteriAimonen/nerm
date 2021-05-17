@@ -8,7 +8,7 @@ def test_update():
     '''Test the writing of cross-reference list to Markdown file.
     Tests [FR-Update].
     '''
-    settings = nerm.nermfile.load_settings("tests/data/Nermfile", must_exist = False)
+    settings = nerm.nermfile.load_settings("tests/data/Nermfile.toml")
     reqs = nerm.reqfile.find_requirements(settings)
     nerm.crossrefs.find_cross_references(reqs, settings)
 

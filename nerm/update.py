@@ -8,17 +8,17 @@ from tempfile import NamedTemporaryFile
 def write_crossrefs(dstfile, requirement, settings):
     '''Write list of cross-references to output file.'''
     for crossref in requirement.crossrefs:
-        dstfile.write(settings['crossref_prefix']
-                    + settings['crossref_format'].format(c = crossref, r = requirement)
+        dstfile.write(settings['update']['crossref_prefix']
+                    + settings['update']['crossref_format'].format(c = crossref, r = requirement)
                     + '\n')
 
 def write_satisfy(dstfile, requirement, settings):
     '''Write a line indicating the requirement is satisfied.'''
     if requirement.satisfied_by:
-        terms = [settings['satisfy_term_format'].format(c = crossref, r = requirement)
+        terms = [settings['update']['satisfy_term_format'].format(c = crossref, r = requirement)
                  for crossref in requirement.satisfied_by]
-        terms = settings['satisfy_term_delimiter'].join(terms)
-        dstfile.write(settings['satisfy_prefix'] + terms + '\n')
+        terms = settings['update']['satisfy_term_delimiter'].join(terms)
+        dstfile.write(settings['update']['satisfy_prefix'] + terms + '\n')
 
 def update_document(file, dstfile, requirements, settings):
     '''Update all cross references in given file.
@@ -33,7 +33,7 @@ def update_document(file, dstfile, requirements, settings):
     # Collect positions of document where we need to insert crossrefs
     insertion_points = set()
     for req in requirements.values():
-        if settings['crossref_location'] == 'start':
+        if settings['update']['location'] == 'start':
             req.crossref_pos = req.lineno
         else:
             req.crossref_pos = req.last_lineno
@@ -46,8 +46,8 @@ def update_document(file, dstfile, requirements, settings):
         srclineno += 1
         
         # Remove any old cross-references, keep other lines
-        if (line.startswith(settings['crossref_prefix']) or
-            line.startswith(settings['satisfy_prefix'])):
+        if (line.startswith(settings['update']['crossref_prefix']) or
+            line.startswith(settings['update']['satisfy_prefix'])):
             line = ''
             prev_line_removed = True
         elif prev_line_removed and not line.strip():
@@ -92,7 +92,7 @@ def update_all_crossrefs(requirements, settings):
 # Results are written under /tmp
 if __name__ == '__main__':
     from . import nermfile, reqfile, crossrefs
-    settings = nermfile.load_settings("Nermfile", False)
+    settings = nermfile.load_settings("Nermfile.toml", False)
     reqs = reqfile.find_requirements(settings)
     crossrefs.find_cross_references(reqs, settings)
 

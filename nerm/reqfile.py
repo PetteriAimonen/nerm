@@ -44,7 +44,7 @@ class Requirement:
 def iterate_requirements(file, settings):
     '''Iterate requirements from a single document.'''
     parser = commonmark.Parser()
-    patterns = [re.compile(p) for p in settings['requirement_patterns']]
+    patterns = [re.compile(p) for p in settings['requirements']['patterns']]
     document = parser.parse(open(file).read())
     relpath = os.path.relpath(file, settings['basedir'])
     prev_line = 0
@@ -70,8 +70,9 @@ def find_requirements(settings):
     '''
     basedir = settings['basedir']
     result = OrderedDict()
-    for path in settings['requirement_paths']:
-        for file in glob.glob(path, recursive = True):
+    for path in settings['requirements']['paths']:
+        abspath = os.path.abspath(os.path.join(settings['basedir'], path))
+        for file in glob.glob(abspath, recursive = True):
             for req in iterate_requirements(file, settings):
                 result[req.tag] = req
     
@@ -80,7 +81,7 @@ def find_requirements(settings):
 # For manual testing run with `python -m nerm.reqfile`
 if __name__ == '__main__':
     from nerm import nermfile
-    settings = nermfile.load_settings("Nermfile", False)
+    settings = nermfile.load_settings("Nermfile.toml", False)
     for req in find_requirements(settings).values():
         print('%s: %s (lines %d to %d)' % (os.path.relpath(req.file, settings['basedir']),
             req.tag, req.lineno, req.last_lineno))

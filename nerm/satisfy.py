@@ -14,7 +14,7 @@ def check_rule(requirement, rule, settings):
     crossrefs = []
 
     for crossref in requirement.crossrefs:
-        template = settings['satisfy_template'].format(c = crossref, r = requirement)
+        template = settings['satisfy']['template'].format(c = crossref, r = requirement)
 
         for term in list(remaining):
             if term.search(template):
@@ -22,6 +22,7 @@ def check_rule(requirement, rule, settings):
                 crossrefs.append(crossref)
 
     if remaining:
+        print(requirement.tag, remaining)
         return None
     else:
         return crossrefs
@@ -33,18 +34,11 @@ def is_requirement_satisfied(requirement, settings):
     if not requirement.crossrefs:
         return None # Requirement with no references cannot be satisfied.
 
-    for tag_pattern, rules in settings['satisfy_rules']:
+    for tag_pattern, rule in settings['satisfy']['rules']:
         if re.search(tag_pattern, requirement.tag):
-            # The rules consist of list of lists.
-            # The top-level lists are ORed together and the inner lists are ANDed.
-            # E.g. [[1, 2], 3] means (1 and 2) or 3
-            if isinstance(rules, str):
-                rules = [rules]
-
-            for rule in rules:
-                satisfied_by = check_rule(requirement, rule, settings)
-                if satisfied_by:
-                    return satisfied_by
+            satisfied_by = check_rule(requirement, rule, settings)
+            if satisfied_by:
+                return satisfied_by
 
     return None
 
@@ -59,7 +53,7 @@ def check_satisfied(requirements, settings):
 # For manual testing run with `python -m nerm.satisfy`
 if __name__ == '__main__':
     from . import nermfile, reqfile, crossrefs
-    settings = nermfile.load_settings("Nermfile", False)
+    settings = nermfile.load_settings("Nermfile.toml", False)
     reqs = reqfile.find_requirements(settings)
     crossrefs.find_cross_references(reqs, settings)
     check_satisfied(reqs, settings)
