@@ -18,6 +18,7 @@ if __name__ == "__main__" and __package__ is None:
 
 from .nermfile import load_settings
 from .reqfile import find_requirements
+from .gitrefs import find_git_references
 from .crossrefs import find_cross_references
 from .satisfy import check_satisfied
 from .update import update_all_crossrefs
@@ -37,6 +38,7 @@ def main_cli():
         settings = load_settings("Nermfile.toml", must_exist = False)
 
     reqs = find_requirements(settings)
+    find_git_references(reqs, settings)
     find_cross_references(reqs, settings)
     check_satisfied(reqs, settings)
 

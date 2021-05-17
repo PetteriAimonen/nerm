@@ -10,6 +10,7 @@ def check_rule(requirement, rule, settings):
     if isinstance(rule, str):
         rule = [rule] # String is same as rule list with one term
 
+    ignore_patterns = [re.compile(pattern) for pattern in settings['satisfy']['ignore']]
     remaining = set(re.compile(term) for term in rule)
     crossrefs = []
 
@@ -18,11 +19,13 @@ def check_rule(requirement, rule, settings):
 
         for term in list(remaining):
             if term.search(template):
+                if any(p.search(template) for p in ignore_patterns):
+                    continue
+
                 remaining.remove(term)
                 crossrefs.append(crossref)
 
     if remaining:
-        print(requirement.tag, remaining)
         return None
     else:
         return crossrefs

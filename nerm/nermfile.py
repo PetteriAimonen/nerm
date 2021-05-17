@@ -37,6 +37,18 @@ patterns = [
     '([^\s].*(\[[A-Za-z0-9][^ \]]*\]).*)'
 ]
 
+# *** Discovery of cross-references in git commit messages ***
+[git]
+
+# Path to git repository root, relative to Nermfile.
+path = '.'
+
+# Patterns to search for in commit message.
+# First group is the descriptive text and second group is the tag name.
+patterns = [
+    '([^\s].*(\[[A-Za-z0-9][^ \]]*\]).*)'
+]
+
 # *** Rules for evaluating the satisfaction of requirements ***
 [satisfy]
 
@@ -61,6 +73,9 @@ patterns = [
 #
 rules = []
 
+# Ignore specific kinds of cross-references for the purpose of satisfaction analysis.
+ignore = ['^gitadd-.*']
+
 # Template used to convert cross references to strings for satisfaction matching.
 template = '{c.relpath}:{c.lineno} {c.fulltext}'
 
@@ -70,22 +85,29 @@ template = '{c.relpath}:{c.lineno} {c.fulltext}'
 # Location of the cross reference list. Either 'start' or 'end' of section.
 location = 'end'
 
-# Prefix to use in new cross references added to list.
-# Any lines starting with this prefix will be removed during update.
-crossref_prefix = '- &#128279; '
+# *** Formatting rules for specific kinds of reference ***
+# Existing lines matching one of the formatting prefixes are removed during update.
 
-# Format for cross references, by default a link with #L123 anchor to jump to line.
-crossref_format = '[{c.basename}:{c.lineno}]({c.relpath}#L{c.lineno}): {c.fulltext}'
+# References to other text files
+[formats.fileref]
+prefix = '- &#128462; '
+format = '[{c.basename}:{c.lineno}]({c.relpath}#L{c.lineno}): {c.fulltext}'
+    
+# References to git commits
+[formats.gitref]
+prefix = '- &#9939; '
+format = '{c.shorthash}: {c.fulltext}'
 
-# Prefix to use in lines indicating requirement satisfaction.
-# Any lines starting with this prefix will be removed during update.
-satisfy_prefix = '- &check; Satisfied by '
-
-# Format for terms in requirement satisfaction line
-satisfy_term_format = '[{c.basename}:{c.lineno}]({c.relpath}#L{c.lineno})'
-
-# Delimiter between multiple terms
-satisfy_term_delimiter = ' and '
+# Reference to git commit that added the requirement
+[formats.gitadd]
+prefix = '- &#9733; Added by '
+format = '{c.author} in {c.shorthash} on {c.date}'
+    
+# Reference to set of files that satisfy the requirement
+[formats.satisfy]
+prefix = '- &check; Satisfied by '
+format = '[{c.basename}:{c.lineno}]({c.relpath}#L{c.lineno})'
+delimiter = ' and '
 
 '''
 

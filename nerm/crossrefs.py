@@ -1,11 +1,13 @@
-'''Finds cross references to requirement tags.'''
+'''Finds cross references to requirement tags from text files.'''
 
 import re
 import glob
 import os.path
+from .update import is_generated_line
 
 class Crossref:
-    def __init__(self, file, relpath, lineno, fulltext):
+    def __init__(self, file, relpath, lineno, fulltext, relation = 'fileref'):
+        self.relation = relation
         self.file = file
         self.relpath = relpath
         self.basename = os.path.basename(file)
@@ -23,6 +25,10 @@ def iterate_crossrefs(file, known_tags, settings):
         lineno = 0
         for line in open(file):
             lineno += 1
+
+            if is_generated_line(line, settings):
+                continue
+
             for pattern in patterns:
                 match = pattern.search(line)
                 if match and match.group(2) in known_tags:
@@ -38,7 +44,7 @@ def find_cross_references(requirements, settings):
     Implements [FR-Crossreference]
     '''
 
-    known_tags = requirements.keys()
+    known_tags = set(requirements.keys())
 
     for path in settings['crossrefs']['paths']:
         abspath = os.path.abspath(os.path.join(settings['basedir'], path))

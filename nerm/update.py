@@ -5,20 +5,32 @@ import os
 import os.path
 from tempfile import NamedTemporaryFile
 
+def is_generated_line(line, settings):
+    '''Checks if the line starts with one of the prefixes for generated lines.'''
+    for k, v in settings['formats'].items():
+        if line.startswith(v['prefix']):
+            return True
+    
+    return False
+
 def write_crossrefs(dstfile, requirement, settings):
     '''Write list of cross-references to output file.'''
     for crossref in requirement.crossrefs:
-        dstfile.write(settings['update']['crossref_prefix']
-                    + settings['update']['crossref_format'].format(c = crossref, r = requirement)
-                    + '\n')
+        fmt = settings['formats'].get(crossref.relation)
+
+        if fmt and fmt.get('prefix'):
+            dstfile.write(fmt['prefix']
+                          + fmt['format'].format(c = crossref, r = requirement)
+                          + '\n')
 
 def write_satisfy(dstfile, requirement, settings):
     '''Write a line indicating the requirement is satisfied.'''
     if requirement.satisfied_by:
-        terms = [settings['update']['satisfy_term_format'].format(c = crossref, r = requirement)
+        fmt = settings['formats']['satisfy']
+        terms = [fmt['format'].format(c = crossref, r = requirement)
                  for crossref in requirement.satisfied_by]
-        terms = settings['update']['satisfy_term_delimiter'].join(terms)
-        dstfile.write(settings['update']['satisfy_prefix'] + terms + '\n')
+        terms = fmt['delimiter'].join(terms)
+        dstfile.write(fmt['prefix'] + terms + '\n')
 
 def update_document(file, dstfile, requirements, settings):
     '''Update all cross references in given file.
@@ -46,8 +58,7 @@ def update_document(file, dstfile, requirements, settings):
         srclineno += 1
         
         # Remove any old cross-references, keep other lines
-        if (line.startswith(settings['update']['crossref_prefix']) or
-            line.startswith(settings['update']['satisfy_prefix'])):
+        if is_generated_line(line, settings):
             line = ''
             prev_line_removed = True
         elif prev_line_removed and not line.strip():
