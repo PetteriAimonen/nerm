@@ -39,6 +39,12 @@ Any existing links that no longer exist are removed.
 - &#128279; [test_update.py:9](tests/test_update.py#L9): Tests [FR-Update].
 - &check; Satisfied by [update.py:72](nerm/update.py#L72) and [test_update.py:9](tests/test_update.py#L9)
 
+[FR-IncrementalUpdate] Incremental updating of cross-references
+---------------------------------------------------------------
+Updating the whole cross-reference list easily leads to conflicts between git branches when
+line numbers change. Incremental update mode will not change existing lines if only
+difference is the numeric values.
+
 [FR-Satisfy] Determine satisfied requirements
 ---------------------------------------------
 Criteria for satisfying a requirement are specified in a Nermfile.
