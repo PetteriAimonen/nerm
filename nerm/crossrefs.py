@@ -33,6 +33,8 @@ def iterate_crossrefs(file, known_tags, settings):
                 match = pattern.search(line)
                 if match and match.group(2) in known_tags:
                     yield (lineno, match.group(2), match.group(1))
+                    break
+
 
     except UnicodeDecodeError:
         pass # Binary file
