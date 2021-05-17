@@ -34,7 +34,7 @@ paths = ['**/*']
 # Default patterns match a comment text or a whole line.
 patterns = [
     '[#/*]\s*([^#/*].*(\[[A-Za-z0-9][^ \]]*\]).*)',
-    '([^\s].*(\[[A-Za-z0-9][^ \]]*\]).*)'
+    '((?:[^\s].*)?(\[[A-Za-z0-9][^ \]]*\]).*)'
 ]
 
 # *** Discovery of cross-references in git commit messages ***

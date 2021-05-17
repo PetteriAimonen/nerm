@@ -18,7 +18,7 @@ def test_update():
     dst.seek(0)
     lines = dst.readlines()
 
-    lines_with_refs = [line for line in lines if line.startswith(settings['crossref_prefix'])]
+    lines_with_refs = [line for line in lines if nerm.update.is_generated_line(line, settings)]
     
     assert 'otherdoc.md' in lines_with_refs[0]
     assert 'test.md' in lines_with_refs[1]
