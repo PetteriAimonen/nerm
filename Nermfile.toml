@@ -11,3 +11,11 @@ rules = [
     # in e.g. commit message.
     ['DR-.*', '.*'],
 ]
+
+[formats.gitref]
+prefix = '- &#9939; '
+format = '[{c.shorthash}](https://github.com/PetteriAimonen/nerm/commit/{c.fullhash}): {c.fulltext}'
+
+[formats.gitadd]
+prefix = '- &#9733; Added by '
+format = '{c.author} in [{c.shorthash}](https://github.com/PetteriAimonen/nerm/commit/{c.fullhash}) on {c.date}'
