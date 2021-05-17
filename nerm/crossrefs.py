@@ -60,7 +60,7 @@ def find_cross_references(requirements, settings):
                         continue
                     else:
                         # Add cross-reference
-                        relpath = os.path.relpath(file, settings['basedir'])
+                        relpath = os.path.relpath(file, os.path.dirname(req.file))
                         req.crossrefs.append(Crossref(file, relpath, lineno, fulltext))
 
 # For manual testing run with `python -m nerm.crossrefs`
