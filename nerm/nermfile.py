@@ -46,7 +46,7 @@ path = '.'
 # Patterns to search for in commit message.
 # First group is the descriptive text and second group is the tag name.
 patterns = [
-    '([^\s].*(\[[A-Za-z0-9][^ \]]*\]).*)'
+    '(.*(\[[A-Za-z0-9][^ \]]*\]).*)'
 ]
 
 # *** Rules for evaluating the satisfaction of requirements ***

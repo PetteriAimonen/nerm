@@ -13,6 +13,7 @@ class Gitref(Crossref):
         self.shorthash = commit.repo.git.rev_parse(self.fullhash, short = 6)
         self.author = str(commit.author)
         self.summary = commit.summary
+        self.message = commit.message
         self.datetime = commit.committed_datetime
         self.date = self.datetime.date()
         self.fulltext = fulltext
