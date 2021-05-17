@@ -32,6 +32,7 @@ If a git repository is detected, all commit messages are searched for requiremen
 A cross-reference is added also from the commit that added the requirement.
 
 - &#9733; Added by Petteri Aimonen in 3c01f9 on 2021-05-12
+- &#9939; ace598: Implement [FR-Gitreferences]
 - &#128462; [gitrefs.py:73](nerm/gitrefs.py#L73): Implements [FR-Gitreferences].
 
 [FR-Update] Updating cross-references
